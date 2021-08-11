@@ -19,7 +19,16 @@ async function updateStudent(id, nameInput, tuoiInput) {
     const dbo = await getDB();
     await dbo.collection("students").updateOne(filter, newValue);
 }
-
-exports.getDB = getDB;
-exports.insertStudent = insertStudent;
-exports.updateStudent = updateStudent;
+async function getStudentById(id) {
+    const dbo = await getDB();
+    const s = await dbo.collection("students").findOne({ _id: ObjectId(id) });
+    return s;
+}
+async function deleteStudent(id) {
+    const dbo = await getDB();
+    await dbo.collection("students").deleteOne({ "_id": ObjectId(id) });
+}
+module.exports = {getDB,insertStudent,updateStudent,getStudentById,deleteStudent}
+// exports.getDB = getDB;
+// exports.insertStudent = insertStudent;
+// exports.updateStudent = updateStudent;
