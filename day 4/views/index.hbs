@@ -22,7 +22,9 @@
     <ul>
         {{#each data}}
            <li>{{name}} - {{tuoi}}
-               <a href="/delete?id={{_id}}">Delete</a></li> 
+               <a href="/delete?id={{_id}}">Delete</a>
+               <a href="/edit?id={{_id}}">Edit</a>
+            </li> 
         {{/each}} 
     </ul>
     
