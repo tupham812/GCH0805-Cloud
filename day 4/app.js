@@ -31,8 +31,8 @@ app.post('/doLogin',async (req,res)=>{
     const name = req.body.txtName;
     const pass = req.body.txtPassword;
     console.log(name)
+    //get role from database: could be "-1", admin, customer
     var role = await getRole(name,pass);
-    console.log("role ",role)
     if(role != "-1"){
         req.session["User"] = {
             name: 'tom',

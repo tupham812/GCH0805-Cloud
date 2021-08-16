@@ -7,7 +7,7 @@ async function getDB() {
     return dbo;
 }
 
-//return -1: invalid; admin or customer
+//return "-1": invalid; admin or customer
 async function getRole(nameInput,pass){
     const dbo = await getDB();
     const s = await dbo.collection("users").findOne({ name: nameInput, pass:pass });
