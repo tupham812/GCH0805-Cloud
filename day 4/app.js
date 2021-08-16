@@ -3,7 +3,8 @@ const session = require('express-session');
 
 const app = express()
 
-const { insertStudent, updateStudent, getStudentById, deleteStudent, getDB } = require('./databaseHandler');
+const { insertStudent, updateStudent, getStudentById, deleteStudent
+    , getDB, insertUser,getRole } = require('./databaseHandler');
 
 app.set('view engine', 'hbs')
 app.use(express.urlencoded({ extended: true }))
@@ -15,19 +16,27 @@ app.use(session({
     cookie: { maxAge: 600000 }
 }));
 
+app.post('/register',async (req,res)=>{
+    const name = req.body.txtName;
+    const pass = req.body.txtPassword;
+    const role = req.body.role;
+    insertUser({name:name,pass:pass,role:role})
+    res.redirect('/login')
+})
+
 app.get('/login',(req,res)=>{
     res.render('login')
 })
-app.post('/doLogin',(req,res)=>{
+app.post('/doLogin',async (req,res)=>{
     const name = req.body.txtName;
     const pass = req.body.txtPassword;
     console.log(name)
-    //valid user: tom;123
-    if((name=="tom") && (pass=="123")){
-        console.log('ok login')
+    var role = await getRole(name,pass);
+    console.log("role ",role)
+    if(role != "-1"){
         req.session["User"] = {
             name: 'tom',
-            role: 'admin'
+            role: role
         }
     }
     res.redirect('/');

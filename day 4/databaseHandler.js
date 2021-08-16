@@ -7,6 +7,21 @@ async function getDB() {
     return dbo;
 }
 
+//return -1: invalid; admin or customer
+async function getRole(nameInput,pass){
+    const dbo = await getDB();
+    const s = await dbo.collection("users").findOne({ name: nameInput, pass:pass });
+    if(s==null)
+        return "-1";
+    else
+        return s.role;
+}
+
+async function insertUser(newUser) {
+    const dbo = await getDB();
+    await dbo.collection("users").insertOne(newUser);
+}
+
 async function insertStudent(newStudent) {
     const dbo = await getDB();
     await dbo.collection("students").insertOne(newStudent);
@@ -28,7 +43,7 @@ async function deleteStudent(id) {
     const dbo = await getDB();
     await dbo.collection("students").deleteOne({ "_id": ObjectId(id) });
 }
-module.exports = {getDB,insertStudent,updateStudent,getStudentById,deleteStudent}
+module.exports = {getDB,insertStudent,updateStudent,getStudentById,deleteStudent,insertUser,getRole}
 // exports.getDB = getDB;
 // exports.insertStudent = insertStudent;
 // exports.updateStudent = updateStudent;
