@@ -8,6 +8,8 @@
 </head>
 <body>
     <h1>Hello world</h1>
+    <h2>{{auth.name}} and {{auth.role}}</h2>
+
     <form action="/search" method="post">
         <input type="text" name="txtSearch">
         <input type="submit" value="Search">
@@ -17,11 +19,14 @@
         <br>
         Tuoi <input type="text" name="txtTuoi">
         <br>
+        Picture <input type="text" name="txtPicture"/>
+        <br>
         <input type="submit" value="Insert Student">
     </form>
     <ul>
         {{#each data}}
            <li>{{name}} - {{tuoi}}
+               <img src="{{picture}}" width="150" height="100"/>
                <a href="/delete?id={{_id}}">Delete</a>
                <a href="/edit?id={{_id}}">Edit</a>
             </li> 

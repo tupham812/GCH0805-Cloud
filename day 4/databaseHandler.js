@@ -16,7 +16,7 @@ async function updateStudent(id, nameInput, tuoiInput) {
     const filter = { _id: ObjectId(id) };
     const newValue = { $set: { name: nameInput, tuoi: tuoiInput } };
 
-    const dbo = await getDB();
+    const dbo = await getDB ();
     await dbo.collection("students").updateOne(filter, newValue);
 }
 async function getStudentById(id) {
