@@ -9,6 +9,8 @@ const { insertStudent, updateStudent, getStudentById, deleteStudent
 app.set('view engine', 'hbs')
 app.use(express.urlencoded({ extended: true }))
 
+app.use(express.static('public'))
+
 app.use(session({
     resave: true,
     saveUninitialized: true,
@@ -35,7 +37,7 @@ app.post('/doLogin',async (req,res)=>{
     var role = await getRole(name,pass);
     if(role != "-1"){
         req.session["User"] = {
-            name: 'tom',
+            name: name,
             role: role
         }
     }
@@ -61,6 +63,11 @@ app.post('/insert', async (req, res) => {
     const nameInput = req.body.txtName;
     const tuoiInput = req.body.txtTuoi;
     const pictureInput = req.body.txtPicture;
+    if(nameInput.length <4){
+        res.render("index",{errorMsg:'Ten nho hon 4 ky tu'})
+        return;
+    }
+
     const newStudent = { name: nameInput, tuoi: tuoiInput, picture: pictureInput }
 
     insertStudent(newStudent);
@@ -81,16 +88,25 @@ app.post('/search', async (req, res) => {
     res.render('index', { data: allStudents })
 })
 
-app.get('/', async (req, res) => {
-    if(req.session["User"] == null){
-        res.redirect('/login')
-    }
+app.get('/', checkLogin, async (req, res) => {
     const dbo = await getDB();
     const allStudents = await dbo.collection("students").find({}).toArray();
     res.render('index', { data: allStudents, auth :req.session["User"] })
 })
 
-const PORT = process.env.PORT || 5000;
+app.get('/noLogin',checkLogin,(req,res)=>{
+    res.render('noLogin')
+})
+
+function checkLogin(req,res,next){
+    if(req.session["User"] == null){
+        res.redirect('/login')
+    }else{
+        next()
+    }
+}
+
+const PORT = process.env.PORT || 5001;
 app.listen(PORT)
 console.log("app is running ", PORT)
 
